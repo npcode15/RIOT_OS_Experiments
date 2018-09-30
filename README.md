@@ -1,4 +1,4 @@
-#This experiment performs ping-pong of messages between 2 nodes.
+# This experiment performs ping-pong of messages between 2 nodes.
 
 ## Requirement 
 2 virtual nodes or 2 hardware device.
