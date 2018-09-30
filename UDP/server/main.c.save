@@ -1,0 +1,90 @@
+#include <stdio.h>
+#include "msg.h"
+#include "net/ipv6/addr.h"
+#include "net/gnrc.h"
+#include "net/gnrc/netif.h"
+#include "net/gnrc/netreg.h"
+#include "net/gnrc/pktbuf.h"
+#include "sched.h"
+#include <time.h>
+#include "udp.h"
+#include "od.h"
+#include "udp.c"
+#include "shell.h"
+
+void rcv_pkt(void);
+void get_interface_and_address(void);
+static void send(char *addr_str, char *port_str, char *data, unsigned int num, unsigned int delay);
+
+int main(void)
+{
+    int cnt = 0;
+    while (cnt<10){
+    get_interface_and_address();
+    
+rcv_pkt();
+    cnt = cnt + 1;
+   }
+
+    //printf("Timestamp I: %" PRIu32 "\n", xtimer_usec_from_ticks(xtimer_now()));
+    //printf("Timestamp II: %" PRIu32 "\n", xtimer_usec_from_ticks(xtimer_now()));
+
+    //char line_buf[SHELL_DEFAULT_BUFSIZE];
+    //shell_run(NULL, line_buf, SHELL_DEFAULT_BUFSIZE);
+    return 0;
+}
+
+void get_interface_and_address(void){
+   /* get interfaces and print their addresses */
+    gnrc_netif_t *netif = NULL;
+    while ((netif = gnrc_netif_iter(netif))) {
+        ipv6_addr_t ipv6_addrs[GNRC_NETIF_IPV6_ADDRS_NUMOF];
+        int res = gnrc_netapi_get(netif->pid, NETOPT_IPV6_ADDR, 0, ipv6_addrs,
+                                  sizeof(ipv6_addrs));
+
+        if (res < 0) {
+            continue;
+        }
+        for (unsigned i = 0; i < (unsigned)(res / sizeof(ipv6_addr_t)); i++) {
+            char ipv6_addr[IPV6_ADDR_MAX_STR_LEN];
+
+            ipv6_addr_to_str(ipv6_addr, &ipv6_addrs[i], IPV6_ADDR_MAX_STR_LEN);
+            printf("My address is %s\n", ipv6_addr);
+        }
+    }
+}
+
+void rcv_pkt(void) {
+ unsigned int count = 0;
+
+ int num = 4;
+ msg_t msg_queue[num];
+ msg_init_queue(msg_queue, num);
+
+ gnrc_netreg_entry_t server = GNRC_NETREG_ENTRY_INIT_PID(8888, sched_active_pid);
+ gnrc_netreg_register(GNRC_NETTYPE_UDP, &server);
+
+ // gnrc_netreg_entry_t server = GNRC_NETREG_ENTRY_INIT_PID(NULL, sched_active_pid);
+ // gnrc_netreg_register(GNRC_NETTYPE_UNDEF, &server);
+
+ msg_t msg;
+ while (1) {
+    gnrc_pktsnip_t *pkt;
+    msg_receive(&msg);
+    pkt = (gnrc_pktsnip_t *)msg.content.ptr;
+
+    time_t t;
+    time(&t);
+    printf("Received UDP Packet No. %u at %s \n", ++count, ctime(&t));
+    printf("NETTYPE_UNDEF (%i)\n", pkt->type);
+    od_hex_dump(pkt->data, pkt->size, OD_WIDTH_DEFAULT);
+
+    xtimer_sleep(5);
+    printf("UDP -> Send");
+    udp_hdr_print(pkt->data);
+    send("fe80::9464:71ff:fe69:f1ab", "8888", "Hello Node M3-101", 1, 2000000);
+
+    gnrc_pktbuf_release(pkt);
+    break;
+ }
+}

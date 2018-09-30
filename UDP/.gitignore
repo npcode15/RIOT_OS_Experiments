@@ -1,0 +1,5 @@
+client/bin/
+server/bin/
+serial_data_cap.py
+iotlab-m3-*.lnk
+*.bat
