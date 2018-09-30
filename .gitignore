@@ -3,6 +3,7 @@ UDP/client/bin/
 UDP/server/bin/
 UDP/iotlab-m3-*.lnk
 UDP\*.bat
+*.bat
 MAC/client/bin/*
 MAC/server/bin/*
 Logs/
