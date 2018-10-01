@@ -1,5 +1,5 @@
 # name of your application
-APPLICATION = client_udp
+APPLICATION = client_mac
 
 # If no BOARD is found in the environment, use this default:
 BOARD ?= native
@@ -16,15 +16,9 @@ CFLAGS += -DDEVELHELP
 QUIET ?= 1
 
 # Modules to include:
-USEMODULE += shell
-USEMODULE += shell_commands
-USEMODULE += ps
 USEMODULE += xtimer
-#USEMODULE += gnrc_netdev_default
-#USEMODULE += auto_init_gnrc_netif
-#USEMODULE += gnrc_ipv6_default
-#USEMODULE += gnrc_icmpv6_echo
-#USEMODULE += gnrc_udp
+USEMODULE += gnrc_netdev_default
+USEMODULE += auto_init_gnrc_netif
 USEMODULE += od
 USEMODULE += gnrc_txtsnd
 

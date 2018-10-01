@@ -27,7 +27,7 @@ static void send(char *addr_str, char *data)
     /* parse interface */
     // iface = atoi(argv[1]);
     /* get interface, if available */
-    iface = 6;
+    iface = 3;
     printf("iface is: %i\n", iface);
     if (!_is_iface(iface)) {
         puts("error: invalid interface given");

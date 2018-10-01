@@ -1,5 +1,5 @@
 # name of your application
-APPLICATION = server_udp
+APPLICATION = server_mac
 
 # If no BOARD is found in the environment, use this default:
 BOARD ?= native
@@ -24,14 +24,7 @@ USEMODULE += xtimer
 USEMODULE += gnrc_netdev_default
 #To auto-initialize these network devices as GNRC network interfaces
 USEMODULE += auto_init_gnrc_netif
-#You may choose to build either as an IPv6 Node
-#USEMODULE += gnrc_ipv6_default
-#For ICMPv6 echo request/reply (ping) functionality:
-#USEMODULE += gnrc_icmpv6_echo
-#For UDP support include
-#USEMODULE += gnrc_udp
 USEMODULE += od
-#USEMODULE += gnrc_pktdump
 USEMODULE += gnrc_txtsnd
 
 include $(RIOTBASE)/Makefile.include

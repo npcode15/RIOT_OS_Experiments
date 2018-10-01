@@ -13,9 +13,8 @@
 #include "od.h"
 #include "shell.h"
 
-// char *ip_address = "fe80::1711:6b10:65fc:5c22"; //100
-// char *ip_address = "fe80::882e:19ff:fe4e:acb0"; //tap1
-char *mac_address = "8a:2e:19:4e:ac:b0"; //tap1
+// char *mac_address = "8a:2e:19:4e:ac:b0"; //tap1
+char *mac_address = "15:11:6b:10:65:fc:5c:22"; //m-100
 
 char stack[THREAD_STACKSIZE_MAIN];
 void *rcv_pkt(void *arg);
@@ -53,8 +52,8 @@ void *rcv_pkt(void *arg) {
  while (1) {
     msg_receive(&msg);
     gnrc_pktsnip_t *pkt;
-
     pkt = (gnrc_pktsnip_t *)msg.content.ptr;
+
     od_hex_dump(pkt->data, pkt->size, OD_WIDTH_DEFAULT);
 
     printf("Sending Reply\n");
